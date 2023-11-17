@@ -26,17 +26,18 @@ requirements:
 
 test:
   requires:
+    - gcc  # [linux]
     - pip
-    - pytest
-  source_files:
-    - run.py
-    - tests/
+    - pytest  # [linux]
+  source_files:  # [linux]
+    - run.py  # [linux]
+    - tests/  # [linux]
   commands:
     # check metadata
     - python -m pip check
     - python -m pip show ctypesgen
-    # run test suite
-    - python -m pytest tests/testsuite.py
+    # run test suite (on linux only)
+    - python -m pytest tests/testsuite.py  # [linux]
     # check entry points
     - ctypesgen --help
 
