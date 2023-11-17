@@ -1,13 +1,13 @@
 {% set name = "ctypesgen" %}
-{% set version = "1.0.2" %}
+{% set version = "1.1.1" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://github.com/davidjamesca/ctypesgen/archive/{{ name }}-{{ version }}.tar.gz
-  sha256: 409ff3984ecf2aef09008045a713d61031990e95834074bff27957430223b729
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: deaa2d64a95d90196a2e8a689cf9b952be6f3366f81e835245354bf9dbac92f6
 
 build:
   entry_points:
@@ -19,36 +19,43 @@ build:
 requirements:
   host:
     - pip
-    - python >=2.7
+    - python >=3.7
     - setuptools
   run:
-    - python >=2.7
+    - python >=3.7
 
 test:
   requires:
+    - gcc  # [linux]
     - pip
+    - pytest  # [linux]
+  source_files:  # [linux]
+    - run.py  # [linux]
+    - tests/  # [linux]
   commands:
+    # check metadata
     - python -m pip check
+    - python -m pip show ctypesgen
+    # run test suite (on linux only)
+    - python -m pytest tests/testsuite.py  # [linux]
+    # check entry points
     - ctypesgen --help
 
 about:
-  home: https://github.com/davidjamesca/ctypesgen/
-  dev_url: https://github.com/davidjamesca/ctypesgen.git
-  doc_url: https://github.com/davidjamesca/ctypesgen/wiki
+  home: https://github.com/ctypesgen/ctypesgen/
+  dev_url: https://github.com/ctypesgen/ctypesgen.git
+  doc_url: https://github.com/ctypesgen/ctypesgen/wiki
   license: BSD-2-Clause
   license_file: LICENSE
   summary: Python wrapper generator for ctypes
-  description:
-    ctypesgen reads parses c header files and creates a wrapper for
-    libraries based on what it finds.
-    Preprocessor macros are handled in a manner consistent with typical
-    c code.
-    Preprocessor macro functions are translated into Python functions
-    that are then made available to the user of the newly-generated
-    Python wrapper library.
-    ctypesgen can also output JSON, which can be used with Mork, which
-    generates bindings for Lua, using the alien module
-    (which binds libffi to Lua).
+  description: |
+    ctypesgen is a pure-python ctypes wrapper generator.
+    It parses C header files and creates a wrapper for libraries based on what it finds.
+
+    Preprocessor macros are handled in a manner consistent with typical C code.
+    Preprocessor macro functions are translated into Python functions that are then made available to the user of the newly-generated Python wrapper library.
+
+    It can also output JSON, which can be used with Mork, which generates bindings for Lua, using the alien module (which binds libffi to Lua).
 
 extra:
   recipe-maintainers:
